@@ -11,7 +11,7 @@ jobs:
       - name: Clone open.mp
         run: git clone --recursive https://github.com/openmultiplayer/open.mp omp
       - name: Deps
-        run: sudo apt-get update && sudo apt-get install -y ninja-build cmake
+        run: sudo apt-get update && sudo apt-get install -y ninja-build cmake && pip install conan && conan profile detect --force
       - name: Configure
         run: |
           cd omp
