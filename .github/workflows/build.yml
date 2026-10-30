@@ -1,0 +1,31 @@
+name: build-omp-armv7
+on: [workflow_dispatch, push]
+defaults:
+  run:
+    shell: bash
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clone open.mp
+        run: git clone --recursive https://github.com/openmultiplayer/open.mp omp
+      - name: Deps
+        run: sudo apt-get update && sudo apt-get install -y ninja-build cmake
+      - name: Configure
+        run: |
+          cd omp
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
+            -DANDROID_ABI=armeabi-v7a -DANDROID_PLATFORM=android-24 \
+            -DTARGET_BUILD_ARCH=armv7 -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_SERVER=1 -DSTATIC_STDCXX=true 2>&1 | tee ../configure.log
+      - name: Build
+        run: cd omp && cmake --build build 2>&1 | tee ../build.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: omp-armv7
+          path: |
+            *.log
+            omp/build/Output/**
