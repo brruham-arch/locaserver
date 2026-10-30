@@ -16,7 +16,7 @@ jobs:
         run: |
           cd omp
           cmake -S . -B build -G Ninja \
-            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/toolchain.cmake \
             -DANDROID_ABI=armeabi-v7a -DANDROID_PLATFORM=android-24 \
             -DTARGET_BUILD_ARCH=armv7 -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SERVER=1 -DSTATIC_STDCXX=true 2>&1 | tee ../configure.log
